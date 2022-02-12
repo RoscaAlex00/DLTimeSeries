@@ -13,7 +13,7 @@ def load_alcohol():
     file_test = glob.glob(os.path.join(CURRENT_DIR, path_test))
 
     df_train = (pd.read_csv(file) for file in file_train)
-    df_test = (pd.read_csv(file) for file in file_train)
+    df_test = (pd.read_csv(file) for file in file_test)
 
     train_df = pd.concat(df_train, ignore_index=True)
     test_df = pd.concat(df_test, ignore_index=True)

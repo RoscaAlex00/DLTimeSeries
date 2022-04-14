@@ -21,3 +21,4 @@ torch==1.11.0
 torch-geometric-temporal==0.52.0
 torch-geometric==2.0.4
 gplearn==0.4.1
+spektral==1.1.0

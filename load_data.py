@@ -31,16 +31,12 @@ def load_alcohol():
 def prepare_data_alcohol(df_patient):
     if len(df_patient.columns) > 22:
         df_patient = df_patient.drop(columns=['Since the last survey; how many times have you used a tobacco product?'])
+    # column names from paper
     replacement_names = ['start', 'finish', 'drinks', 'comfortable', 'stressed', 'down', 'calm', 'pressure',
                          'enthusiastic', 'happy', 'conflict', 'craving', 'impulsive', 'pos_expect', 'peer_percent',
                          'want_drink', 'delay_grat', 'angry', 'drink_predict', 'restless_sleep', 'difficulty_sleep',
                          'hours_sleep']
 
     df_patient.columns = replacement_names
-    df_patient['start'] = pd.to_datetime(df_patient['start'])
-    df_patient = df_patient.set_index('start')
-    df_patient = df_patient.loc[df_patient['finish'].notnull()]
-    df_patient['finish'] = pd.to_datetime(df_patient['finish'])
-
 
     return df_patient

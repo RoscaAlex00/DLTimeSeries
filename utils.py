@@ -126,11 +126,7 @@ def standardize(data):
 
 def eval_results(actual, predicted, show):
     corr = np.corrcoef(predicted, actual)[0, 1]
-    r2 = 0
-    if corr is not numpy.NaN:
-        r2 = corr ** 2
-
-    # r2 = metrics.r2_score(actual, predicted)
+    r2 = metrics.r2_score(actual, predicted)
     rmse = metrics.mean_squared_error(actual, predicted, squared=False)
     mae = metrics.mean_absolute_error(actual, predicted)
 

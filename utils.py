@@ -3,6 +3,7 @@ import numpy as np
 import glob
 import os
 from IPython.display import display
+from sklearn import metrics
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -81,5 +82,32 @@ def load_covid():
     covid = covid[~(covid['ID'] != covid['ID_lag'])]
 
     return covid
+
+
+def standardize(data):
+    local = data.copy()
+    for col in local.columns:
+        local[col] = (local[col] - local[col].mean()) / np.std(local[col])
+    return local
+
+
+def eval_results(actual, predicted, show):
+    corr = np.corrcoef(predicted, actual)[0, 1]
+    r2 = 0
+    if corr is not None:
+        r2 = corr ** 2
+
+    # r2 = metrics.r2_score(actual, predicted)
+    rmse = metrics.mean_squared_error(actual, predicted, squared=False)
+    mae = metrics.mean_absolute_error(actual, predicted)
+
+    if show:
+        print('R_squared:', r2)
+        print('MAPE:', metrics.mean_absolute_percentage_error(actual, predicted))
+        print('RMSE:', rmse)
+        print('MAE:', mae)
+        print('CORR:', corr)
+
+    return r2, rmse, mae
 
 

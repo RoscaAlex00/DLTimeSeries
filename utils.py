@@ -1,9 +1,11 @@
+import numpy
 import pandas as pd
 import numpy as np
 import glob
 import os
 from IPython.display import display
 from sklearn import metrics
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 
@@ -81,8 +83,39 @@ def load_covid():
     covid = covid[~(covid['time'].dt.day != covid['time_lag'].dt.day)]
     covid = covid[~(covid['ID'] != covid['ID_lag'])]
 
+    covid = covid[covid['ID'].map(covid['ID'].value_counts()) > 30]
+    covid = covid.dropna()
+
     return covid
 
+
+def patients_covid():
+    covid_data = load_covid()
+
+    id_list = covid_data['ID'].unique().tolist()
+    covid_patients = []
+    for i in id_list:
+        df_patient = covid_data.loc[covid_data['ID'] == i]
+        covid_patients.append(df_patient)
+
+    print('Patient included in study:')
+    print(id_list)
+
+    covid_train_x_list, covid_test_x_list, covid_train_y_list, covid_test_y_list = [], [], [], []
+
+    for j in range(len(covid_patients)):
+        current = covid_patients[j].drop(columns=['ID', 'ID_lag', 'time', 'time_lag', 'Duration', 'Duration_lag'])
+        covid_X = current.drop(current.columns[range(0, 19)], axis=1)
+        covid_y = current['Nervous']
+
+        covid_train_x, covid_test_x, covid_train_y, covid_test_y = train_test_split(covid_X, covid_y, test_size=0.3,
+                                                                                    random_state=j)
+        covid_train_x_list.append(covid_train_x)
+        covid_test_x_list.append(covid_test_x)
+        covid_train_y_list.append(covid_train_y)
+        covid_test_y_list.append(covid_test_y)
+
+    return covid_train_x_list, covid_test_x_list, covid_train_y_list, covid_test_y_list
 
 def standardize(data):
     local = data.copy()
@@ -94,7 +127,7 @@ def standardize(data):
 def eval_results(actual, predicted, show):
     corr = np.corrcoef(predicted, actual)[0, 1]
     r2 = 0
-    if corr is not None:
+    if corr is not numpy.NaN:
         r2 = corr ** 2
 
     # r2 = metrics.r2_score(actual, predicted)
@@ -109,5 +142,3 @@ def eval_results(actual, predicted, show):
         print('CORR:', corr)
 
     return r2, rmse, mae
-
-

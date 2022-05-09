@@ -117,6 +117,7 @@ def patients_covid():
 
     return covid_train_x_list, covid_test_x_list, covid_train_y_list, covid_test_y_list
 
+
 def standardize(data):
     local = data.copy()
     for col in local.columns:
@@ -138,3 +139,9 @@ def eval_results(actual, predicted, show):
         print('CORR:', corr)
 
     return r2, rmse, mae
+
+
+def average_metrics(r2_list, rmse_list, mae_list):
+    print('Average R_Squared:', np.mean(r2_list))
+    print('Average RMSE:', np.mean(rmse_list))
+    print('Average MAE:', np.mean(mae_list))

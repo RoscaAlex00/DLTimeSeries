@@ -83,7 +83,7 @@ def load_covid():
     covid = covid[~(covid['time'].dt.day != covid['time_lag'].dt.day)]
     covid = covid[~(covid['ID'] != covid['ID_lag'])]
 
-    covid = covid[covid['ID'].map(covid['ID'].value_counts()) >= 40]
+    covid = covid[covid['ID'].map(covid['ID'].value_counts()) >= 32]
     covid = covid.dropna()
 
     return covid
@@ -106,7 +106,7 @@ def patients_covid():
     for j in range(len(covid_patients)):
         current = covid_patients[j].drop(columns=['ID', 'ID_lag', 'time', 'time_lag', 'Duration', 'Duration_lag'])
         covid_X = current.drop(current.columns[range(0, 19)], axis=1)
-        covid_y = current['C19_worry']
+        covid_y = current['Worry']
 
         covid_train_x, covid_test_x, covid_train_y, covid_test_y = train_test_split(covid_X, covid_y, test_size=0.3,
                                                                                     random_state=j)

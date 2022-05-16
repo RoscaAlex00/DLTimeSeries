@@ -83,8 +83,9 @@ def load_covid():
     covid = covid[~(covid['time'].dt.day != covid['time_lag'].dt.day)]
     covid = covid[~(covid['ID'] != covid['ID_lag'])]
 
-    covid = covid[covid['ID'].map(covid['ID'].value_counts()) >= 32]
+    covid = covid[covid['ID'].map(covid['ID'].value_counts()) >= 35]
     covid = covid.dropna()
+    print(len(np.unique(covid['ID'])))
 
     return covid
 
@@ -130,37 +131,19 @@ def eval_results(actual, predicted, show):
     r2 = metrics.r2_score(actual, predicted)
     rmse = metrics.mean_squared_error(actual, predicted, squared=False)
     mae = metrics.mean_absolute_error(actual, predicted)
+    mape = metrics.mean_absolute_percentage_error(actual, predicted)
 
     if show:
         print('R_squared:', r2)
-        print('MAPE:', metrics.mean_absolute_percentage_error(actual, predicted))
+        print('MAPE:', mape)
         print('RMSE:', rmse)
         print('MAE:', mae)
         print('CORR:', corr)
 
-    return r2, rmse, mae
-
-
-def eval_results_covid(actual, predicted, show):
-    rmse = metrics.mean_squared_error(actual, predicted, squared=False)
-    mae = metrics.mean_absolute_error(actual, predicted)
-    mape = metrics.mean_absolute_percentage_error(actual, predicted)
-
-    if show:
-        print('MAPE:', mape)
-        print('RMSE:', rmse)
-        print('MAE:', mae)
-
     return mape, rmse, mae
 
 
-def average_metrics(r2_list, rmse_list, mae_list):
-    print('Average R_Squared:', np.mean(r2_list))
-    print('Average RMSE:', np.mean(rmse_list))
-    print('Average MAE:', np.mean(mae_list))
-
-
-def average_metrics_covid(mape_list, rmse_list, mae_list):
+def average_metrics(mape_list, rmse_list, mae_list):
     print('Average MAPE:', np.mean(mape_list))
     print('Average RMSE:', np.mean(rmse_list))
     print('Average MAE:', np.mean(mae_list))

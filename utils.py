@@ -152,20 +152,20 @@ def eval_results(actual, predicted, show):
     r2 = metrics.r2_score(actual, predicted)
     rmse = metrics.mean_squared_error(actual, predicted, squared=False)
     mae = metrics.mean_absolute_error(actual, predicted)
-    mape = metrics.mean_absolute_percentage_error(actual, predicted)
+    mse = metrics.mean_squared_error(actual, predicted, squared=True)
 
     if show:
         print('R_squared:', r2)
-        print('MAPE:', mape)
+        print('MSE:', mse)
         print('RMSE:', rmse)
         print('MAE:', mae)
         print('CORR:', corr)
 
-    return mape, rmse, mae
+    return mse, rmse, mae
 
 
 # Function that computes the average metrics, since there are too much information to display it per individual
-def average_metrics(mape_list, rmse_list, mae_list):
-    print('Average MAPE:', np.mean(mape_list))
+def average_metrics(mse_list, rmse_list, mae_list):
+    print('Average MSE:', np.mean(mse_list))
     print('Average RMSE:', np.mean(rmse_list))
     print('Average MAE:', np.mean(mae_list))

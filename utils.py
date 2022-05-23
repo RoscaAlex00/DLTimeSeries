@@ -125,7 +125,7 @@ def patients_covid():
         # Remove redundant variables
         current = covid_patients[j].drop(columns=['ID', 'ID_lag', 'time', 'time_lag', 'Duration', 'Duration_lag'])
         covid_X = current.drop(current.columns[range(0, 19)], axis=1)
-        covid_y = current['Worry']
+        covid_y = current['C19_occupied']
 
         # Splitting into train/test
         covid_train_x, covid_test_x, covid_train_y, covid_test_y = train_test_split(covid_X, covid_y, test_size=0.3,
@@ -148,7 +148,7 @@ def standardize(data):
 
 # Compute the metrics for a list of actual values and a list of predicted values
 def eval_results(actual, predicted, show):
-    corr = np.corrcoef(predicted, actual)[0, 1]
+    # corr = np.corrcoef(predicted, actual)[0, 1]
     r2 = metrics.r2_score(actual, predicted)
     rmse = metrics.mean_squared_error(actual, predicted, squared=False)
     mae = metrics.mean_absolute_error(actual, predicted)
@@ -159,7 +159,7 @@ def eval_results(actual, predicted, show):
         print('MSE:', mse)
         print('RMSE:', rmse)
         print('MAE:', mae)
-        print('CORR:', corr)
+        # print('CORR:', corr)
 
     return mse, rmse, mae
 

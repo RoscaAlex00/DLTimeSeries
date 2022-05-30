@@ -128,8 +128,18 @@ def patients_covid():
         covid_y = current['C19_occupied']
 
         # Splitting into train/test
-        covid_train_x, covid_test_x, covid_train_y, covid_test_y = train_test_split(covid_X, covid_y, test_size=0.3,
-                                                                                    random_state=j)
+        # covid_train_x, covid_test_x, covid_train_y, covid_test_y = train_test_split(covid_X, covid_y, test_size=0.3,
+        #                                                                            random_state=j)
+
+        # Temporal splits
+        test_size = int(0.3 * len(covid_X))
+
+        covid_train_x = covid_X.iloc[:-test_size]
+        covid_train_y = covid_y.iloc[:-test_size]
+
+        covid_test_x = covid_X.iloc[-test_size:]
+        covid_test_y = covid_y.iloc[-test_size:]
+
         covid_train_x_list.append(covid_train_x)
         covid_test_x_list.append(covid_test_x)
         covid_train_y_list.append(covid_train_y)
